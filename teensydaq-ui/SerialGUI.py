@@ -67,9 +67,29 @@ class GUI(QMainWindow):
 
 
     def updatefig(self, *args):
-        a = list(self.data)
-        self.serialPlotter.set_data(list(range(len(a))),a)
+        # self.data has the following format: ID, X, Y
+        # Split the data into X and Y for each ID [0 and 1]
+
+        X0 = []
+        Y0 = []
+        X1 = []
+        Y1 = []
+        for i in range(len(self.data)):
+            if self.data[i][0] == 0:
+                X0.append(self.data[i][1])
+                Y0.append(self.data[i][2])
+            elif self.data[i][0] == 1:
+                X1.append(self.data[i][1])
+                Y1.append(self.data[i][2])
+
+        # Update the plot
+        self.serialPlotter.set_data(X0,Y0)
+
         return self.serialPlotter,
+
+        # a = list(self.data)
+        # self.serialPlotter.set_data(list(range(len(a))),a)
+        # return self.serialPlotter,
 
     def SerialSendPanel(self):
         # Create recording side and sending side
@@ -119,6 +139,7 @@ class GUI(QMainWindow):
 
     def toggleRecording(self):
         if self.serialThread.recording: # if stopping:
+            print("Recording stopped")
             self.serialPlotter.set_color(self.colors[0])
             self.serialThread.stop_recording()
             
@@ -132,6 +153,7 @@ class GUI(QMainWindow):
             self.update()
             QApplication.processEvents()
         else:
+            print("Recording started")
             self.setInputFile()
             self.serialPlotter.set_color(self.colors[1])
             if self.curFileName != "":
@@ -160,7 +182,7 @@ class Dialog(QDialog):
         layout = QVBoxLayout()
 
         # Make dropdown
-        dropdownChoices = glob.glob("/dev/tty.*")[::-1]
+        dropdownChoices = glob.glob("/dev/tty*")[::-1]
         self.dd = QComboBox()
         self.dd.addItems(dropdownChoices)
         self.formGroupBox = QGroupBox("")

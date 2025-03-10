@@ -93,13 +93,14 @@ class SerialThread(threading.Thread):
         tmp = copy.copy(self.data)
         tmp = b''.join(tmp)
         tmp = tmp.strip().split(b'\r\n')
+        print("Data: ", tmp)
         tmp = [x.decode("utf-8").strip() for x in tmp]
         with open(self.recordingfilename, "w+") as f:
             f.write(",".join(tmp))
 
         # Add data to the graph
         try:
-            self.dataHolder = [int(x) for x in tmp]
+            self.dataHolder = [(int(parts[0]), int(parts[1]), int(parts[2])) for parts in (x.split(',') for x in tmp)]
         except Exception as e:
             print("error:", e)
             print('graph failed')
