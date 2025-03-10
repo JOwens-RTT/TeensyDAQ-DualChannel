@@ -1,9 +1,8 @@
 #include "ADC.h"
-#include "Arduino.h"
 
-using TimeStamp = volatile uint32_t;
-using ADCValue = volatile uint16_t;
-using Pin = uint8_t;
+#include <Arduino.h>
+#include <StatusLED>
+#include <proj_aliases.hpp>
 
 ADC* adc = new ADC();
 
@@ -13,27 +12,7 @@ struct ADCReading
     ADCValue value;
 };
 
-class StatusLED
-{
-public:        // Constructor and Destructor
-    StatusLED(Pin pin = LED_BUILTIN) : m_pin(pin) { pinMode(m_pin, OUTPUT); }
-
-    ~StatusLED() = default;
-
-public:        // Methods
-    void on() { digitalWrite(m_pin, HIGH); }
-
-    void off() { digitalWrite(m_pin, LOW); }
-
-    void toggle() { digitalWrite(m_pin, !digitalRead(m_pin)); }
-
-    void set(bool state) { digitalWrite(m_pin, state); }
-
-private:        // Fields
-    const Pin m_pin;
-};
-
-StatusLED led;
+TeensyDAQ::StatusLED led;
 
 class ADCPipe
 {
