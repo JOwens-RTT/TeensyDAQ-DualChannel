@@ -21,7 +21,7 @@ class ADCPipe
 public:        // Constructor and Destructor
     ADCPipe(ADC_Module* mod, Pin pin, int sampleRate, int printRate, Pin clk = 11);
 
-    ~ADCPipe() = default;
+    ~ADCPipe() { stop(); }
 
 public:        // Fields
     ADCReading reading;
@@ -35,6 +35,26 @@ public:        // Methods
     void start();
 
     void stop();
+
+    static Pin clockPin() { return s_clkPin; }
+
+    void resetClock() { m_clock = false; }
+
+private:        // Fields
+    ADC_Module* m_mod;
+    const Pin m_pin;
+    const int m_sampleRate;
+    const int m_printRate;
+    static Pin s_clkPin;
+    static bool s_clkInit;
+    bool m_clock;
+    bool m_newData;
+
+    IntervalTimer m_sampleTimer;
+    IntervalTimer m_printTimer;
+
+private:        // Methods
+    static void initClock(Pin p);
 
     inline void sample()
     {
@@ -60,26 +80,6 @@ public:        // Methods
             Serial.println(reading.value);
         }
     }
-
-    static Pin clockPin() { return s_clkPin; }
-
-    void resetClock() { m_clock = false; }
-
-private:        // Fields
-    ADC_Module* m_mod;
-    const Pin m_pin;
-    const int m_sampleRate;
-    const int m_printRate;
-    static Pin s_clkPin;
-    static bool s_clkInit;
-    bool m_clock;
-    bool m_newData;
-
-    IntervalTimer m_sampleTimer;
-    IntervalTimer m_printTimer;
-
-private:        // Methods
-    static void initClock(Pin p);
 };
 
 }        // namespace TeensyDAQ
