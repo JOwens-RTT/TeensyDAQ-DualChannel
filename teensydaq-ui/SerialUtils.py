@@ -106,7 +106,7 @@ class SerialThread(threading.Thread):
             print('graph failed')
 
         print("Done recording: Saved", len(tmp), "numbers in", round(self.stopRecordTime-self.startRecordTime,2) ,
-              "s, at frequency", round(len(tmp)/(self.stopRecordTime-self.startRecordTime)/1000,2), "kHz")
+              "s, at frequency", round(len(tmp)/(self.stopRecordTime-self.startRecordTime)/2000,2), "kHz")
 
         # Reset variables and iterate the default file num
         self.data = []
