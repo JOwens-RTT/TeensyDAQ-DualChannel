@@ -82,9 +82,6 @@ private:        // Methods
     static void initClock(Pin p);
 };
 
-extern ADCPipe* adc0Pipe;
-extern ADCPipe* adc1Pipe;
-
 }        // namespace TeensyDAQ
 
 #endif        // TEENSY_DAQ_LIB_ADC_PIPE_H
